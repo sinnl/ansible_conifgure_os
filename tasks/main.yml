@@ -71,7 +71,7 @@
   template:
     src: files/resolv.conf
     dest: /etc/resolv.conf
-  backup: true
+    backup: true
 
 - name: RHEL spcyfic config
   include_tasks: rhel.yml
