@@ -61,11 +61,17 @@
   timezone:
     name: "{{ timezone }}"
 
-- name: Edit resolv.conf
+- name: Generate resolv.conf
   template:
-    src: ../templates/resolv.conf
+    src: resolv.j2
+    dest: files/resolv.conf
+  delegate_to: localhost
+
+- name: Update resolv.conf
+  template:
+    src: files/resolv.conf
     dest: /etc/resolv.conf
-    backup: true
+  backup: true
 
 - name: RHEL spcyfic config
   include_tasks: rhel.yml
