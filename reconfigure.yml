@@ -1,0 +1,10 @@
+---
+-
+  hosts: vms
+  #gather_facts: false
+  vars:
+    vm_hostname: "{{ inventory_hostname }}"
+  roles:
+    - configure.kvm-vm
+    - arillso.ntp
+
