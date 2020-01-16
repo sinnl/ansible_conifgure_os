@@ -7,7 +7,6 @@
   tags:
     - epel
   ignore_errors: yes
-  when: ansible_os_family == 'RedHat'
 
 - name: Update to latest version
   package:
@@ -26,7 +25,7 @@
     - tree
     - wget
     - cifs-utils
-  ignore_erros: yes
+  ignore_errors: yes
 
 - name: Disable Network Manager
   service:
