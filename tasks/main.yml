@@ -67,11 +67,11 @@
     dest: files/resolv.conf
   delegate_to: localhost
   loop:
-    - domain1: {{ domain1 }}
-    - domain2: {{ domain2 }}
-    - dns1: {{ dns1 }}
-    - dns2: {{ dns2 }}
-    - dns3: {{ dns3 }}
+    - domain1: "{{ domain1 }}"
+    - domain2: "{{ domain2 }}"
+    - dns1: "{{ dns1 }}"
+    - dns2: "{{ dns2 }}"
+    - dns3: "{{ dns3 }}"
 
 
 - name: Update resolv.conf
