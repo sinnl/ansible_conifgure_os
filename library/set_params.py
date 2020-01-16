@@ -72,6 +72,11 @@ def run_module():
         dns1 = '10.65.32.21'
         dns2 = '10.65.32.40'
         dns3 = '10.65.32.113'
+    elif oktet1 == 168 :
+        timezone = 'Europe\Warsaw'
+        dns1 = '192.168.1.1'
+        dns2 = '192.168.1.211'
+        dns3 = '8.8.8.8'
     else:
         timezone = 'UTC'
         dns1 = '10.25.32.61'
