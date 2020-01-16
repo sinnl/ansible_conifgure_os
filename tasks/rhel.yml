@@ -1,0 +1,37 @@
+---
+- name: Install EPEL
+  package:
+    name: epel-release
+    state: latest
+    update_cache: yes
+  tags:
+    - epel
+  ignore_errors: yes
+  when: ansible_os_family == 'RedHat'
+
+- name: Update to latest version
+  package:
+    name: '*'
+    state: latest
+
+- name: Install required packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - nc
+    - bind-utils
+    - bash-completion
+    - bash-completion-extras
+    - tree
+    - wget
+    - cifs-utils
+  ignore_erros: yes
+
+- name: Disable Network Manager
+  service:
+    name: NetworkManager
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+...

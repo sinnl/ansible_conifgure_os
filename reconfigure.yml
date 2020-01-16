@@ -5,6 +5,6 @@
   vars:
     vm_hostname: "{{ inventory_hostname }}"
   roles:
-    - configure.kvm-vm
+    - ansible_conifgure_os 
     - arillso.ntp
 

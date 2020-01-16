@@ -2,45 +2,23 @@
 
 # Tasks to configure VM once it's deployed.
 
+- name: Set Timezne and DNS resolvers
+  set_params:
+    ip: "{{ ansible_default_ipv4.network }}"
+
 - name: Set hostname to {{ vm_hostname }}
   hostname:
     name: "{{ vm_hostname }}"
 
-- name: Install EPEL
-  package:
-    name: epel-release
-    state: latest
-    update_cache: yes
-  tags:
-    - epel
-  ignore_errors: yes
-
-- name: Update to latest version
-  package:
-    name: '*'
-    state: latest
-
-- name: Install required packages
-  package:
-    name: "{{ item }}"
-    state: latest
-  loop:
-    - nc
-    - bind-utils
-    - bash-completion
-    - bash-completion-extras
-    - tree
-    - wget
-
-- name: Create tux group
+- name: Create groups
   group:
     name: "{{ item }}"
     state: present
   loop:
-    - tux
+    - ansible
     - failsafe
 
-- name: Add tux user
+- name: Add Users
   user:
     name: "{{ item }}"
     comment: Automation user
@@ -51,16 +29,16 @@
     shell: /usr/bin/bash
     password: "$6$itluk$e5qW7SIAilQ0RzNRm4JpF5NTmj69m4G4mR0PNh9az/JMHoaxpkYFHfjUSshTzsC7wX83xG4bJflj.ch7HXtNj0"
   loop:
-    - tux
+    - ansible
     - failsafe
 
 - name: Push ssh key
   authorized_key:
-    user: "{{ item.0 }}" 
+    user: "{{ item.0 }}"
     state: present
     key: "{{ item.1 }}"
   with_together:
-    - [root, tux, failsafe]
+    - [root, ansible, failsafe]
     - ["{{ lookup('file', '/root/.ssh/id_rsa.pub') }}", "{{ lookup('file', '/home/tux/.ssh/id_rsa.pub') }}", "{{ lookup('file', '/home/failsafe/.ssh/id_rsa.pub') }}"]
 
 - name: Allow 'wheel' group to have passwordless sudo
@@ -79,16 +57,9 @@
   tags:
     - motd
 
-- name: Set the timezone to Europe/Warsaw
+- name: Set the timezone
   timezone:
-    name: "{{ timezone }}" #Europe/Warsaw
-
-- name: Disable Network Manager
-  service:
-    name: NetworkManager
-    state: stopped
-    enabled: no
-  ignore_errors: yes
+    name: "{{ timezone }}"
 
 - name: Edit resolv.conf
   template:
@@ -96,7 +67,6 @@
     dest: /etc/resolv.conf
     backup: true
 
-- name: Check DNS from vms
-  debug:
-    msg: "The IP address for {{ item }} is {{ lookup('dig', '@10.10.0.1', '{{ item }}.') }}"
-  with_items: "{{ play_hosts  }}"
+- name: RHEL spcyfic config
+  include_tasks: rhel.yml
+  when: ansible_os_family == 'RedHat'
