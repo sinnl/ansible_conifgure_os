@@ -73,7 +73,6 @@
       dns2: "{{ dns2 }}"
       dns3: "{{ dns3 }}"
 
-
 - name: Update resolv.conf
   template:
     src: files/resolv.conf
@@ -83,3 +82,35 @@
 - name: RHEL spcyfic config
   include_tasks: rhel.yml
   when: ansible_os_family == 'RedHat'
+
+- name: Update .bashrc
+  copy:
+    src: files/{{ item }}
+    dest: /root/{{ item  }}
+    owner: root
+  with_items:
+      - '.bashrc'
+      - '.tmux.conf'
+      - '.vimrc'
+
+- name: Install tmux plugins
+  shell: "git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm"
+  ignore_errors: yes
+
+- name: Create directory for vim plugins
+  file: 
+    path: /root/.vim/autoload
+    state: directory
+ 
+
+- name: install vim plugged
+  shell: "cd /root/.vim/autoload/ && curl -O https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+  ignore_errors: yes
+
+- name: Install plugins
+  command: "vim \'+PlugInstall --sync\' +qall!"
+  ignore_errors: yes
+
+- name: YCME install 
+  command: "cd /root/.vim/plugged/YouCompleteMe && python3 install.py &>/dev/null"
+  ignore_errors: yes

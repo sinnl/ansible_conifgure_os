@@ -24,8 +24,49 @@
     - bash-completion-extras
     - tree
     - wget
+    - curl
     - cifs-utils
+    - git
+    - python3
+    - vim
+    - yum-plugin-copr
+    - tmux
+    - cmake
+    - python36-pygments
   ignore_errors: yes
+
+- name: Enable neofetch repo
+  command: "yum -y copr enable konimex/neofetch"
+  ignore_errors: yes
+
+- name: Install neofetch 
+  package:
+    name: neofetch
+    state: latest
+  ignore_errors: yes
+
+- name: Add ripgrep repo
+  yum_repository:
+    name: ripgrep
+    description: ripgrep repo
+    baseurl: "https://download.copr.fedorainfracloud.org/results/carlwgeorge/ripgrep/epel-7-$basearch/"
+    gpgcheck: yes 
+    gpgkey: "https://download.copr.fedorainfracloud.org/results/carlwgeorge/ripgrep/pubkey.gpg"
+    repo_gpgcheck: no
+  ignore_errors: yes 
+
+- name: Enable vim 8 repos
+  command: "curl -L https://copr.fedorainfracloud.org/coprs/mcepl/vim8/repo/epel-7/mcepl-vim8-epel-7.repo -o /etc/yum.repos.d/mcepl-vim8-epel-7.repo"
+  ignore_errors: yes 
+
+- name: Install ripgrep  and vim 8
+  package: 
+    name: "{{ item }}"
+    state: latest
+  with_items:
+      - ripgrep 
+      - vim*
+  ignore_errors: yes 
 
 - name: Disable Network Manager
   service:

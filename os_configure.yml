@@ -6,6 +6,6 @@
       #vm_hostname: "{{ inventory_hostname }}"
     vm_hostname: django_sandbox.itluk.eu
   roles:
-    - ansible_conifgure_os 
+    - ansible_reconifgure_os 
     - arillso.ntp
 
